@@ -1,0 +1,2 @@
+1. Installed and setup laravel and composer.
+2. "laravel new app"
