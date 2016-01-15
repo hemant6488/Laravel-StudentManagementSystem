@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.formheader')
 
 @section('content')
 <body id="signup">

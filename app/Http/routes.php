@@ -50,7 +50,6 @@ Route::group(['middleware' => 'web'], function () {
 	//implicit authentication routes located @ /vendor/laravel/framework/src/Illuminate/Routing/Router.php
     Route::auth();
     
-    //Route::get('/home', 'HomeController@index');
 
     //Main dashboard of the app that displays all students
 	Route::get('/show', ['as' => 'Student.show', 'uses' => 'StudentController@show']);
