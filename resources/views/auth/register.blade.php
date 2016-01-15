@@ -21,7 +21,7 @@
 									{!! csrf_field() !!}
 									<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 							    		<label for="name">Your name</label>
-							    		<input type="text" pattern=".{3,}" title="Minimum 3 characters" class="form-control" name="name" value="{{ old('name') }}" />
+							    		<input type="text" pattern=".{3,}" title="Minimum 3 characters" class="form-control" name="name" value="{{ old('name') }}" required />
 							    		@if ($errors->has('name'))
 		                                    <span class="help-block">
 		                                        <strong>{{ $errors->first('name') }}</strong>
@@ -30,7 +30,9 @@
 							  		</div>
 							  		<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 							    		<label for="email">Email address</label>
-							    		<input type="email" class="form-control" name="email" value="{{ old('email') }}" />
+							    		<input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required/>
+							    		<strong><span id="status" class="help-block" style="color:#a94442"></span></strong>
+
 							    		@if ($errors->has('email'))
 		                                    <span class="help-block">
 		                                        <strong>{{ $errors->first('email') }}</strong>
@@ -39,7 +41,7 @@
 							  		</div>
 							  		<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
 							    		<label for="password">Password</label>
-							    		<input type="password" class="form-control" name="password" />
+							    		<input type="password" class="form-control" name="password" required/>
 							    		@if ($errors->has('password'))
 		                                    <span class="help-block">
 		                                        <strong>{{ $errors->first('password') }}</strong>
@@ -48,7 +50,7 @@
 							  		</div>
 							  		<div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 			                            <label for="password_confirmation">Confirm Password</label>
-			                            <input type="password" class="form-control" name="password_confirmation">
+			                            <input type="password" class="form-control" name="password_confirmation" required>
 
 		                                @if ($errors->has('password_confirmation'))
 		                                    <span class="help-block">
@@ -76,14 +78,24 @@
 		</div>
 	</div>
 
-
-
-
 	<script type="text/javascript">
-		$(function () {
-			$(".already-account a").popover();
-			$(".already-account a").popover('show');
+		$(document).ready(function(){
+			$("#email").change(function(){
+				$.ajax({
+					type: "POST",
+					url: "/check",
+					data: {'email':$('input[name=email]').val(), '_token': $('input[name=_token]').val()},
+					dataType: "json",
+					success: function(data){
+						//alert(data);
+						$("#status").html(data);
+					}
+				});
+			});
 		});
+
 	</script>
+
+
 </body>
 @endsection

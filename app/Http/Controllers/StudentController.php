@@ -65,7 +65,7 @@ class StudentController extends Controller{
         $student->gender = $request->input("gender");
         $student->passing_year = $request->input("passing_year");
 
-        //Display Flash msg on successful editing
+        //Display flash msg on successful editing
         if($student->save()){
             $student->interests()->sync($request->input("interests")); //if saving of student is successful sync interests
             Session::flash('message', "Student '" . $student->name . "' updated successfully. " );
@@ -88,6 +88,7 @@ class StudentController extends Controller{
     public function delete($id){
     	$old = Student::find($id);
 
+        //Display flash msg on successful deletion
         if(Student::destroy($id)){
             Session::flash('message', "Student '" . $old->name . "' deleted successfully. " );
             return redirect()->route('Student.show');

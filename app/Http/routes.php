@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Input;
 /*
 |--------------------------------------------------------------------------
 | Routes File
@@ -12,6 +13,18 @@
 
 Route::get('/', function(){
 	return redirect()->route('Student.show');
+});
+
+//Route for ajax email validation
+Route::post('check', function(){
+	$input['email'] = Input::get('email');
+	$validator = Validator::make($input, [
+            'email' => 'unique:users'
+        ]);
+	if($validator->fails()){
+		$result = "Email already exists";
+	}
+	return json_encode($result);
 });
 
 /*
@@ -55,7 +68,6 @@ Route::group(['middleware' => 'web'], function () {
 
 	//Route that handles student deletion
 	Route::get('delete/{id}', ['as' => 'Student.delete', 'uses' => 'StudentController@delete']);
-
 
 
 	Route::post('ajax', function() { // callback instead of controller method
