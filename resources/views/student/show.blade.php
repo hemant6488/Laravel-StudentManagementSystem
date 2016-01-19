@@ -1,8 +1,6 @@
 @extends('layouts.header')
 
 @section('content')
-
-
 				<div id="second-option">
 					<a name="students">
 						<div class="row header">
@@ -30,21 +28,20 @@
 						</div>
 					
 						<div class="row">
-							
-								@foreach ($students as $student)
+							@foreach ($students as $student)
 								<div class="col-md-4 feature">
 									<strong align="center">{{ $student->id }}</strong>
 								</div>
 								<div class="col-md-4 feature">
-									<strong align="center"><a href="{{ url('/view/' . $student->id) }}">{{ $student->name }}</a></strong>
+									<strong align="center"><a href="{{ url('/student/view/' . $student->id) }}">{{ $student->name }}</a></strong>
 								</div>
 								<div class="col-md-4 feature">
-									<strong align="center"><a href="{{ url('/edit/' . $student->id) }}">Edit</a> &nbsp|&nbsp<a href="{{ url('/delete/' . $student->id) }}" onclick="return confirm('Confirm Deletion.')">Delete</a></strong>
+									<strong align="center"><a href="{{ url('/student/edit/' . $student->id) }}">Edit</a> &nbsp|&nbsp<a href="{{ url('/student/delete/' . $student->id) }}" onclick="return confirm('Are you sure you want to delete this student?')">Delete</a></strong>
 								</div>
-								    
-								@endforeach
-							</ol>
+							@endforeach
 						</div>
+						<!--Paginated view links -->
+						<div align="right"> {{ $students->links() }} </div>
 					</div>
 				</div>
 
@@ -76,10 +73,10 @@
 							</div>
 							<div class="col-sm-3 social">
 								<a href="#">
-									<img src="images/social/social-tw.png" alt="twitter" />
+									<img src="/images/social/social-tw.png" alt="twitter" />
 								</a>
 								<a href="#">
-									<img src="images/social/social-dbl.png" alt="dribbble" />
+									<img src="/images/social/social-dbl.png" alt="dribbble" />
 								</a>					
 							</div>
 						</div>
@@ -89,6 +86,8 @@
 			</div><!-- end .st-content -->
 		</div><!-- end .st-pusher -->
 	</div><!-- end .st-container -->
+
+	<script src="{{ asset('js/rightslider.js') }}"></script>
 
 	<div class="modal fade" id="demo">
 	  	<div class="modal-dialog">
@@ -100,39 +99,7 @@
 	 	 </div>
 	</div>
 
-	<script type="text/javascript">
-		$(function () {
-			// Makes the demo video appear/disappear 
-			var $demo = $("#demo");
-			$('#demo').on('hidden.bs.modal', function () {
-			  $demo.find("iframe").remove();
-			})
-			$('#demo').on('show.bs.modal', function () {
-				if (!$demo.find("iframe").length) {
-					$demo.find(".modal-body").append("<iframe src='http://player.vimeo.com/video/22439234' width='650' height='370' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>")
-				}			  
-			});
-
-			// triggers the off-canvas panel
-			$(".sidebar-toggle").click(function (e) {
-				e.stopPropagation();
-				$(".st-container").toggleClass("nav-effect");
-			});
-			$(".st-pusher").click(function () {
-				$(".st-container").removeClass("nav-effect");
-			});
-
-			 // parallax header
-			 $('#cover-image').css("background-position", "50% 50%");
-		    $(window).scroll(function() {
-				var scroll = $(window).scrollTop(), 
-					slowScroll = scroll/4,
-					slowBg = 50 - slowScroll;
-					
-				$('#cover-image').css("background-position", "50% " + slowBg + "%");
-			});
-		});
-	</script>
+	
 </body>
 
 @endsection

@@ -11,7 +11,6 @@
 	<link href="{{ asset('css/vendor/font-awesome.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/vendor/animate.css') }}" rel="stylesheet">
 
-
 	<!-- javascript -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
@@ -27,7 +26,7 @@
 
 		<nav class="nav-menu">
 			<h3>Menu</h3>
-			<a href="{{ URL::to('add') }}" class="item">
+			<a href="{{ url('/student/add') }}" class="item">
 				Add Student
 			</a>
 			<a href="{{ url('#students') }}" class="item">
@@ -71,16 +70,12 @@
 				<div id="hero">
 					<div id="cover-image" class="animated fadeIn">
 						<div class="container">
-							<h1 class="hero-text animated fadeIn">You are now logged in as {{ $authName }}</h1>
+							<h1 class="hero-text animated fadeIn">You are now logged in as <span class="authUsername"> {{ $authUsername }} </span></h1>
 							<div class="cta animated fadeIn">
-								<a href="{{ url('/add') }}" class="button">Add Student</a>
+								<a href="{{ url('/student/add') }}" class="button">Add Student</a>
 								<a href="{{ url('#students') }}" class="button">View Students</a>
-							</div>
-							<div class="screenshot animated fadeInUp">
-								<img src="images/ss2.png" class="img-responsive" alt="screenshot" />
 							</div>
 						</div>
 					</div>
 				</div>
-
 @yield('content')

@@ -16,16 +16,18 @@ Route::get('/', function(){
 });
 
 //Route for ajax email validation
-Route::post('check', function(){
+Route::post('/check', function(){
 	$input['email'] = Input::get('email');
 	$validator = Validator::make($input, [
             'email' => 'unique:users'
         ]);
 	if($validator->fails()){
 		$result = "Email already exists";
-	}
+	} else {$result = null;}
 	return json_encode($result);
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,22 +54,26 @@ Route::group(['middleware' => 'web'], function () {
     
 
     //Main dashboard of the app that displays all students
-	Route::get('/show', ['as' => 'Student.show', 'uses' => 'StudentController@show']);
+	Route::get('/student/show', ['as' => 'Student.show', 'uses' => 'StudentController@show']);
 
 	//Routes that handle addition of a new student
-	Route::get('/add', ['as' => 'Student.add', function(){ return view('add'); }]);
-	Route::post('/add', 'StudentController@add');
+	Route::get('/student/add', ['as' => 'Student.add', 'uses' => 'StudentController@addView']);
+	Route::post('/student/add', 'StudentController@add');
 
 	//Route that handle viewing of a student details
-	Route::get('/view/{id}', ['as' => 'Student.view', 'uses' => 'StudentController@view']);
+	Route::get('/student/view/{id}', ['as' => 'Student.view', 'uses' => 'StudentController@view']);
 
 	//Route that handle editing of a student details
-	Route::get('edit/{id}', ['as' => 'Student.edit', 'uses' => 'StudentController@editView']);
-	Route::post('edit/{id}', 'StudentController@edit');	//id sent as a url argument from editstudent view.
+	Route::get('/student/edit/{id}', ['as' => 'Student.edit', 'uses' => 'StudentController@editView']);
+	Route::post('/student/edit/{id}', 'StudentController@edit');	//id sent as a url argument from editstudent view.
 
 	//Route that handles student deletion
-	Route::get('delete/{id}', ['as' => 'Student.delete', 'uses' => 'StudentController@delete']);
+	Route::get('/student/delete/{id}', ['as' => 'Student.delete', 'uses' => 'StudentController@delete']);
 
+	Route::get('/logout', function(){
+		Auth::logout();
+		return view('auth.logout');
+	});
 
 	Route::post('ajax', function() { // callback instead of controller method
 	    $user = App\User::find(\Input::get('id'));

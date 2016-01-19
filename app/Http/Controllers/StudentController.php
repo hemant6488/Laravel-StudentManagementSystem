@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 use Auth;
 use Session;
 use App\Student as Student; //telling it that we'll refer to our model as Student here.
-use App\Interest;
+use App\Interest as Interest;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 
 class StudentController extends Controller{
     /**
@@ -21,28 +22,34 @@ class StudentController extends Controller{
     }
 
     public function show(){
-    	$students = Student::all();
+    	$students = Student::paginate(10);
         $user = Auth::user(); //sending the name of authenticated user to our view.
-    	$data = array( //creating a data array for sending to our view.
+    	$viewData = array( //creating a data array for sending to our view.
     		'title' => "Student Management System",
     		'students' => $students,
-            'authName' => $user->name
+            'authUsername' => $user->name
     		);
-		return view('show', $data);
+		return view('student.show', $viewData);
     }
 
+    public function addView(){
+        $interests = Interest::all();
+        $viewData = array(
+            'interests' => $interests
+            );
+        return view('student.add', $viewData);
+    }
 
     public function add(Request $request){
-    	//$name = $request->input("name"); //changes with laravel versions
-    	$student = new Student;
-    	$student->name = $request->input("name");
-    	$student->address = $request->input("address");
-    	$student->gender = $request->input("gender");
-    	$student->passing_year = $request->input("passing_year");
+    	$student = Student::create(Input::all()); //mass assignment
         
         //Display Flash msg on successful addition
-        if($student->save()){
-            $student->interests()->sync($request->input("interests")); //if saving of student is successful sync interests
+        if( $student !== false){
+            if(is_null($request->input("interests"))){
+                //do nothing
+            }else{ //if saving of student is successful and interests is not null sync interests
+                $student->interests()->sync($request->input("interests")); 
+            }
             Session::flash('message', "New student '" . $student->name . "' added successfully. " );
             return redirect()->route('Student.show');
         }
@@ -53,9 +60,16 @@ class StudentController extends Controller{
     }
 
     public function editView($id){
-        $old = Student::find($id);
-        $old->interests;
-        return view('edit', $old);
+        $student = Student::find($id);
+        $interestsTable = Interest::all();
+        $studentInterests = (string) $student->interests; //eagerloading :/
+        $studentData = array(
+            'student' => $student,
+            'interestsTable' => $interestsTable,
+            'studentInterests' => $studentInterests
+            );
+        //dd($strInterests);
+        return view('student.edit', $studentData);
     }
 
     public function edit($id, Request $request){
@@ -67,7 +81,12 @@ class StudentController extends Controller{
 
         //Display flash msg on successful editing
         if($student->save()){
-            $student->interests()->sync($request->input("interests")); //if saving of student is successful sync interests
+            if(is_null($request->input("interests"))){
+                //do nothing
+            }else{ //if saving of student is successful and interests is not null sync interests
+                $student->interests()->sync($request->input("interests")); 
+            }
+
             Session::flash('message', "Student '" . $student->name . "' updated successfully. " );
             return redirect()->route('Student.show');
         }
@@ -79,18 +98,18 @@ class StudentController extends Controller{
     }
 
     public function view($id){
-        $old = Student::find($id);
-        $old->interests;
+        $student = Student::find($id);
+        $student->interests;
         //dd($old);
-        return view('view', $old);
+        return view('student.view', $student);
     }
 
     public function delete($id){
-    	$old = Student::find($id);
+    	$oldStudent = Student::find($id);
 
         //Display flash msg on successful deletion
         if(Student::destroy($id)){
-            Session::flash('message', "Student '" . $old->name . "' deleted successfully. " );
+            Session::flash('message', "Student '" . $oldStudent->name . "' deleted successfully. " );
             return redirect()->route('Student.show');
         }
         else{
@@ -98,5 +117,6 @@ class StudentController extends Controller{
             return redirect()->route('Student.show');
         }
     }
+
 
 }

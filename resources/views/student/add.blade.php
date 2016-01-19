@@ -8,7 +8,6 @@
 				<h3 class="logo">
 					<a>Add Student</a>
 				</h3>
-				
 			</div>
 		</div>
 		<div class="row">
@@ -17,7 +16,7 @@
 					<div class="formy">
 						<div class="row">
 							<div class="col-md-12">
-								<form role="form" method="POST" action="{{ url('/add') }}" onsubmit="return validateForm()">
+								<form role="form" method="POST" action="{{ url('/student/add') }}" onsubmit="return validateForm()">
 									{!! csrf_field() !!}
 									<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 							    		<label for="name">Name</label>
@@ -26,7 +25,7 @@
 							  		</div>
 							  		<div class="form-group">
 							    		<label for="address">Address</label>
-							    		<input type="textbox" class="form-control" name="address" required/>
+							    		<textarea rows="5" class="form-control" name="address" required></textarea>
 							  		</div>
 
 							  		<div class="form-group">
@@ -34,7 +33,6 @@
 							    		<input type="radio"  name="gender" value="male" id="gender" required />&nbsp Male    
 							    		<input type="radio"  name="gender" value="female" id="gender"  required/>&nbsp Female
 							  		</div>
-
 
 							  		<div class="form-group">
 							    		<label for="passing_year">Passing Year</label>
@@ -53,10 +51,11 @@
 							  		
 							  		<div class="form-group">
 			                            <label for="interests">Interests<br/></label></br>
-			                            Programming<input type="checkbox" name="interests[]" class="form-control" value="1" id="interests"  />
-			                            Sports<input type="checkbox" name="interests[]" class="form-control" value="3" id="interests"  />
-			                            Arts<input type="checkbox" name="interests[]" class="form-control" value="4" id="interests"  />
-										Music<input type="checkbox" name="interests[]" class="form-control" value="2" id="interests"  />
+			                            @foreach ($interests as $interest)
+			                            	<div class="checkbox">
+			                            		<input type="checkbox" name="interests[]" value="{{ $interest->id }}" id="interests"  />{{ $interest->name }}
+			                            	</div>
+			                            @endforeach
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6 col-md-offset-4">
@@ -73,13 +72,5 @@
 			</div>
 		</div>
 	</div>
-
-	<script type="text/javascript">
-		$(function () {
-			$(".already-account a").popover();
-			$(".already-account a").popover('show');
-		});
-	</script>
-}
 </body>
 @endsection

@@ -78,23 +78,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#email").change(function(){
-				$.ajax({
-					type: "POST",
-					url: "/check",
-					data: {'email':$('input[name=email]').val(), '_token': $('input[name=_token]').val()},
-					dataType: "json",
-					success: function(data){
-						//alert(data);
-						$("#status").html(data);
-					}
-				});
-			});
-		});
-
-	</script>
+	<script src="{{ asset('js/ajax.js') }}"></script>
 
 
 </body>
