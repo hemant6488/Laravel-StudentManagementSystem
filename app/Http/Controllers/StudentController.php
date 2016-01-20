@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Validator;
 use Session;
-use App\Student as Student; //telling it that we'll refer to our model as Student here.
+use App\Student as Student; 
 use App\Interest as Interest;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -25,8 +25,8 @@ class StudentController extends Controller{
     //index() function that displays list of all students
     public function index(){
     	$students = Student::paginate(10);
-        $user = Auth::user(); //sending the name of authenticated user to our view.
-    	$viewData = array( //creating a data array for sending to our view.
+        $user = Auth::user(); 
+    	$viewData = array( 
     		'title' => "Student Management System",
     		'students' => $students,
             'authUsername' => $user->name
@@ -39,7 +39,7 @@ class StudentController extends Controller{
         $interests = Interest::all();
         $viewData = array(
             'interests' => $interests,
-            'try' => $try //for keeping track of backend validation, try will be set to 1, if backend validation fails.
+            'try' => $try // 0 = Initial render, 1 = Errors in data validation | for keeping track of backend validation, try will be set to 1, if backend validation fails.
             );
         return view('students.new', $viewData);
     }
@@ -84,7 +84,7 @@ class StudentController extends Controller{
             App::abort(404);
         }
         $interestsTable = Interest::all();
-        $studentInterests = (string) $student->interests; //eagerloading :/
+        $studentInterests = (string) $student->interests;
         $studentData = array(
             'student' => $student,
             'interestsTable' => $interestsTable,
@@ -97,7 +97,7 @@ class StudentController extends Controller{
 
     //function that handles post requests from edit form
     public function update($id, Request $request){
-        //Validation 
+        //------Validation-------
         $input = Input::all();
         $validator = Validator::make($input, [
                 'name' => 'required',
@@ -108,7 +108,7 @@ class StudentController extends Controller{
         if($validator->fails()){
             return redirect()->route('students.edit', array('id'=>$id, 'try' => 1))->withErrors($validator)->withInput();
         } 
-        //Validation ends
+        //-----End Validation-----
 
         try{
             $student = Student::findOrFail($id);
