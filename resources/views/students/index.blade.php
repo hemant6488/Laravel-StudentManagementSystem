@@ -1,5 +1,4 @@
 @extends('layouts.header')
-
 @section('content')
 				<div id="second-option">
 					<a name="students">
@@ -12,31 +11,30 @@
 
 					<!--adding flash msg-->
 					@if (Session::has('message'))
-					   <div class="alert alert-info">{{ Session::get('message') }}</div>
+					   <div class="alert alert-info text-center">{{ Session::get('message') }}</div>
 					@endif
 
-					
 					<div class="row">
-						<div class="col-md-4 feature">
+						<div class="col-md-4 col-sm-4 col-xs-4 feature">
 							<strong align="center"><b>Roll Number</b></strong>
 						</div>
-						<div class="col-md-4 feature">
+						<div class="col-md-4 col-sm-4 col-xs-4 feature">
 							<strong align="center"><b>Name</b></strong>
 						</div>
-						<div class="col-md-4 feature">
+						<div class="col-md-4 col-sm-4 col-xs-4 feature">
 							<strong align="center"><b>Actions</b></strong>
 						</div>
 					
 						<div class="row">
 							@foreach ($students as $student)
-								<div class="col-md-4 feature">
+								<div class="col-md-4 col-sm-4 col-xs-4 feature">
 									<strong align="center">{{ $student->id }}</strong>
 								</div>
-								<div class="col-md-4 feature">
-									<strong align="center"><a href="{{ url('/student/view/' . $student->id) }}">{{ $student->name }}</a></strong>
+								<div class="col-md-4 col-sm-4 col-xs-4 feature">
+									<strong align="center"><a href="{{ route('students.show', array('id'=>$student->id)) }}">{{ $student->name }}</a></strong>
 								</div>
-								<div class="col-md-4 feature">
-									<strong align="center"><a href="{{ url('/student/edit/' . $student->id) }}">Edit</a> &nbsp|&nbsp<a href="{{ url('/student/delete/' . $student->id) }}" onclick="return confirm('Are you sure you want to delete this student?')">Delete</a></strong>
+								<div class="col-md-4 col-sm-4 col-xs-4 feature">
+									<strong align="center"><a href="{{ route('students.edit', array('id'=>$student->id)) }}">Edit</a> &nbsp|&nbsp<a href="{{ route('students.destroy', array('id'=>$student->id)) }}" onclick="return confirm('Are you sure you want to delete this student?')">Delete</a></strong>
 								</div>
 							@endforeach
 						</div>
@@ -55,19 +53,19 @@
 							<div class="col-sm-6 menu">
 								<ul>
 				      				<li>
-				          				<a href="features.html">Features</a>
+				          				<a>Features</a>
 				        			</li>
 				        			<li>
-				        				<a href="services.html">Services</a>
+				        				<a>Services</a>
 				        			</li>
 				        			<li>
-				          				<a href="pricing.html">Pricing</a>
+				          				<a>Pricing</a>
 				        			</li>
 				        			<li>
-				          				<a href="support.html">Support</a>
+				          				<a>Support</a>
 				        			</li>
 				        			<li>
-				          				<a href="blog.html">Blog</a>
+				          				<a>Blog</a>
 				        			</li>
 				      			</ul>
 							</div>
@@ -93,7 +91,6 @@
 	  	<div class="modal-dialog">
 	    	<div class="modal-content">
 	      		<div class="modal-body">
-	      			<iframe src='http://player.vimeo.com/video/22439234' width='650' height='370' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 	      		</div>
 	    	</div>
 	 	 </div>

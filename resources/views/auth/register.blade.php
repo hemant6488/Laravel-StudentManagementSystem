@@ -8,7 +8,6 @@
 				<h3 class="logo">
 					<a>Register</a>
 				</h3>
-				
 			</div>
 		</div>
 		<div class="row">
@@ -41,7 +40,7 @@
 							  		</div>
 							  		<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
 							    		<label for="password">Password</label>
-							    		<input type="password" class="form-control" name="password" required/>
+							    		<input type="password" pattern=".{6,}" title="Minimum 6 characters" class="form-control" name="password" required/>
 							    		@if ($errors->has('password'))
 		                                    <span class="help-block">
 		                                        <strong>{{ $errors->first('password') }}</strong>
@@ -50,7 +49,7 @@
 							  		</div>
 							  		<div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 			                            <label for="password_confirmation">Confirm Password</label>
-			                            <input type="password" class="form-control" name="password_confirmation" required>
+			                            <input type="password" pattern=".{6,}" title="Minimum 6 characters" class="form-control" name="password_confirmation" required>
 
 		                                @if ($errors->has('password_confirmation'))
 		                                    <span class="help-block">

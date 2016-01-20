@@ -17,15 +17,15 @@
 				<div class="wrapper clearfix">
 					<div class="formy">
 						<div class="row">
-							<div class="col-md-12">
-	                            <div class="col-md-6 text-center">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
 	                            	<a href="{{ url('/login') }}">
 		                                <button type="submit" class="btn btn-primary">
 		                                    <i class="fa fa-btn fa-user"></i>Login
 		                                </button>
 	                            	</a>
 	                            </div>
-	                            <div class="col-md-6 text-center">
+	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
 	                            	<a href="{{ url('/register') }}">
 		                                <button type="submit" class="btn btn-primary">
 		                                    <i class="fa fa-btn fa-user"></i>Signup

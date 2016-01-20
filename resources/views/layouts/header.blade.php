@@ -26,7 +26,7 @@
 
 		<nav class="nav-menu">
 			<h3>Menu</h3>
-			<a href="{{ url('/student/add') }}" class="item">
+			<a href="{{ route('students.new') }}" class="item">
 				Add Student
 			</a>
 			<a href="{{ url('#students') }}" class="item">
@@ -53,11 +53,10 @@
 
 		<div class="st-pusher">
 			<div class="st-content">
-
 				<header class="navbar navbar-inverse hero" role="banner">
 			  		<div class="container">
 			    		<div class="navbar-header">
-			      			<a href="{{ url('/') }}" class="navbar-brand">Student Management</a>
+			      			<a href="{{ route('students.index') }}" class="navbar-brand">Student Management</a>
 			    		</div>
 			    		<div class="sidebar-toggle">
 			    			<div class="line"></div>
@@ -72,7 +71,7 @@
 						<div class="container">
 							<h1 class="hero-text animated fadeIn">You are now logged in as <span class="authUsername"> {{ $authUsername }} </span></h1>
 							<div class="cta animated fadeIn">
-								<a href="{{ url('/student/add') }}" class="button">Add Student</a>
+								<a href="{{ route('students.new') }}" class="button">Add Student</a>
 								<a href="{{ url('#students') }}" class="button">View Students</a>
 							</div>
 						</div>

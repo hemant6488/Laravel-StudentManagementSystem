@@ -85,12 +85,5 @@
 			</div>
 		</div>
 	</div>
-
-	<script type="text/javascript">
-		$(function () {
-			$(".already-account a").popover();
-			$(".already-account a").popover('show');
-		});
-	</script>
 </body>
 @endsection

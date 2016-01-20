@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Validator;
 use Session;
 use App\Student as Student; //telling it that we'll refer to our model as Student here.
 use App\Interest as Interest;
@@ -21,7 +22,8 @@ class StudentController extends Controller{
         $this->middleware('auth');
     }
 
-    public function show(){
+    //index() function that displays list of all students
+    public function index(){
     	$students = Student::paginate(10);
         $user = Auth::user(); //sending the name of authenticated user to our view.
     	$viewData = array( //creating a data array for sending to our view.
@@ -29,18 +31,31 @@ class StudentController extends Controller{
     		'students' => $students,
             'authUsername' => $user->name
     		);
-		return view('student.show', $viewData);
+		return view('students.index', $viewData);
     }
 
-    public function addView(){
+    //function for rendering the new student form
+    public function snew($try=0){
         $interests = Interest::all();
         $viewData = array(
-            'interests' => $interests
+            'interests' => $interests,
+            'try' => $try //for keeping track of backend validation, try will be set to 1, if backend validation fails.
             );
-        return view('student.add', $viewData);
+        return view('students.new', $viewData);
     }
 
-    public function add(Request $request){
+    //function that handles post data from new student form
+    public function create(Request $request){
+        $input = Input::all();
+        $validator = Validator::make($input, [
+                'name' => 'required',
+                'address' => 'required',
+                'gender' => 'required',
+                'passing_year' => 'required'
+            ]);
+        if($validator->fails()){
+            return redirect()->route('students.new', array('try' => 1))->withErrors($validator)->withInput();
+        } 
     	$student = Student::create(Input::all()); //mass assignment
         
         //Display Flash msg on successful addition
@@ -51,72 +66,108 @@ class StudentController extends Controller{
                 $student->interests()->sync($request->input("interests")); 
             }
             Session::flash('message', "New student '" . $student->name . "' added successfully. " );
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
         else{
             Session::flash('message', "Adding new student unsuccessful.");
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
     }
 
-    public function editView($id){
-        $student = Student::find($id);
+    //function for rendering edit form for a student.
+    public function edit($id, $try=0){
+        //$try = Input::get('try');//too keep track of backend validation, if try=1, then backend validation returned failed, and form needs to be repopulated with old values and not with the values in the database.
+        //dd($try);
+        try{
+            $student = Student::findOrFail($id);
+        } catch(Exception $e) {
+            App::abort(404);
+        }
         $interestsTable = Interest::all();
         $studentInterests = (string) $student->interests; //eagerloading :/
         $studentData = array(
             'student' => $student,
             'interestsTable' => $interestsTable,
-            'studentInterests' => $studentInterests
+            'studentInterests' => $studentInterests,
+            'try' => $try
             );
         //dd($strInterests);
-        return view('student.edit', $studentData);
+        return view('students.edit', $studentData);
     }
 
-    public function edit($id, Request $request){
-        $student = Student::find($id);
+    //function that handles post requests from edit form
+    public function update($id, Request $request){
+        //Validation 
+        $input = Input::all();
+        $validator = Validator::make($input, [
+                'name' => 'required',
+                'address' => 'required',
+                'gender' => 'required',
+                'passing_year' => 'required'
+            ]);
+        if($validator->fails()){
+            return redirect()->route('students.edit', array('id'=>$id, 'try' => 1))->withErrors($validator)->withInput();
+        } 
+        //Validation ends
+
+        try{
+            $student = Student::findOrFail($id);
+        } catch(Exception $e) {
+            App::abort(404); //if student details not found in the database
+        }
         $student->name = $request->input("name");
         $student->address = $request->input("address");
         $student->gender = $request->input("gender");
         $student->passing_year = $request->input("passing_year");
 
-        //Display flash msg on successful editing
+        //Display flash msg on successful updation
         if($student->save()){
             if(is_null($request->input("interests"))){
-                //do nothing
+                //no interests then remove from pivot table, (by passing an empty array)
+                $student->interests()->sync(array()); 
             }else{ //if saving of student is successful and interests is not null sync interests
                 $student->interests()->sync($request->input("interests")); 
             }
 
             Session::flash('message', "Student '" . $student->name . "' updated successfully. " );
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
         else{
             Session::flash('message', "Updating student unsuccessful.");
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
 
     }
 
-    public function view($id){
-        $student = Student::find($id);
+    //function to show individual students
+    public function show($id){
+        try{
+            $student = Student::findOrFail($id);
+        } catch(Exception $e) {
+            App::abort(404);
+        }
         $student->interests;
         //dd($old);
-        return view('student.view', $student);
+        return view('students.show', $student);
     }
 
-    public function delete($id){
-    	$oldStudent = Student::find($id);
+    //function to delete a student entry
+    public function destroy($id){
+    	try{
+            $oldStudent = Student::findOrFail($id);
+        } catch(Exception $e) {
+            App::abort(404);
+        }
 
         //Display flash msg on successful deletion
         if(Student::destroy($id)){
             Session::flash('message', "Student '" . $oldStudent->name . "' deleted successfully. " );
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
         else{
             Session::flash('message', "Deleting student unsuccessful.");
-            return redirect()->route('Student.show');
+            return redirect()->route('students.index');
         }
     }
-
 
 }

@@ -12,19 +12,19 @@ use Illuminate\Support\Facades\Input;
 */
 
 Route::get('/', function(){
-	return redirect()->route('Student.show');
+	return redirect()->route('students.index');
 });
 
 //Route for ajax email validation
 Route::post('/check', function(){
 	$input['email'] = Input::get('email');
-	$validator = Validator::make($input, [
-            'email' => 'unique:users'
-        ]);
-	if($validator->fails()){
-		$result = "Email already exists";
-	} else {$result = null;}
-	return json_encode($result);
+        $validator = Validator::make($input, [
+                'email' => 'unique:users'
+            ]);
+        if($validator->fails()){
+            $result = "Email already exists";
+        } else {$result = null;}
+        return json_encode($result);
 });
 
 
@@ -51,24 +51,23 @@ Route::group(['middleware' => 'web'], function () {
     
 	//implicit authentication routes located @ /vendor/laravel/framework/src/Illuminate/Routing/Router.php
     Route::auth();
-    
 
     //Main dashboard of the app that displays all students
-	Route::get('/student/show', ['as' => 'Student.show', 'uses' => 'StudentController@show']);
+	Route::get('/students', ['as' => 'students.index', 'uses' => 'StudentController@index']);
 
 	//Routes that handle addition of a new student
-	Route::get('/student/add', ['as' => 'Student.add', 'uses' => 'StudentController@addView']);
-	Route::post('/student/add', 'StudentController@add');
+	Route::get('/students/new/{try?}', ['as' => 'students.new', 'uses' => 'StudentController@snew']);
+	Route::post('/students', ['as' => 'students.create', 'uses' => 'StudentController@create']);
 
-	//Route that handle viewing of a student details
-	Route::get('/student/view/{id}', ['as' => 'Student.view', 'uses' => 'StudentController@view']);
+	//Route that handles showing a student details
+	Route::get('/students/{id}', ['as' => 'students.show', 'uses' => 'StudentController@show']);
 
 	//Route that handle editing of a student details
-	Route::get('/student/edit/{id}', ['as' => 'Student.edit', 'uses' => 'StudentController@editView']);
-	Route::post('/student/edit/{id}', 'StudentController@edit');	//id sent as a url argument from editstudent view.
+	Route::get('/students/{id}/edit/{try?}', ['as' => 'students.edit', 'uses' => 'StudentController@edit']);
+	Route::post('/students/{id}', ['as' => 'students.update', 'uses' => 'StudentController@update']);	//id sent as a url argument from editstudent view.
 
 	//Route that handles student deletion
-	Route::get('/student/delete/{id}', ['as' => 'Student.delete', 'uses' => 'StudentController@delete']);
+	Route::get('/students/{id}/destroy', ['as' => 'students.destroy', 'uses' => 'StudentController@destroy']);
 
 	Route::get('/logout', function(){
 		Auth::logout();
