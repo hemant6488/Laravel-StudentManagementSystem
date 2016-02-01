@@ -56,14 +56,14 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/students', ['as' => 'students.index', 'uses' => 'StudentController@index']);
 
 	//Routes that handle addition of a new student
-	Route::get('/students/new/{try?}', ['as' => 'students.new', 'uses' => 'StudentController@snew']);
+	Route::get('/students/new/', ['as' => 'students.new', 'uses' => 'StudentController@snew']);
 	Route::post('/students', ['as' => 'students.create', 'uses' => 'StudentController@create']);
 
 	//Route that handles showing a student details
 	Route::get('/students/{id}', ['as' => 'students.show', 'uses' => 'StudentController@show']);
 
 	//Route that handle editing of a student details
-	Route::get('/students/{id}/edit/{try?}', ['as' => 'students.edit', 'uses' => 'StudentController@edit']);
+	Route::get('/students/{id}/edit/', ['as' => 'students.edit', 'uses' => 'StudentController@edit']);
 	Route::post('/students/{id}', ['as' => 'students.update', 'uses' => 'StudentController@update']);	//id sent as a url argument from editstudent view.
 
 	//Route that handles student deletion

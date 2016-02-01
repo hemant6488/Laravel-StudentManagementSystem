@@ -73,8 +73,12 @@
 							    		<label for="name">Interests: </label>
 							    	</div>
 							    	<div class="col-md-6">
+							    		<?php $last = end($interests); ?>
 							    		@foreach($interests as $int)
-							    			{{ $int['name'] }}, 
+							    			{{ $int['name'] }}
+							    			@if(!($int == $last))
+							    			<?php echo ',' ?>
+							    			@endif
 							    		@endforeach
 							    	</div>
 								</div>

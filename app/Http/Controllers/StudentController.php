@@ -35,27 +35,21 @@ class StudentController extends Controller{
     }
 
     //function for rendering the new student form
-    public function snew($try=0){
+    public function snew(){
         $interests = Interest::all();
         $viewData = array(
             'interests' => $interests,
-            'try' => $try // 0 = Initial render, 1 = Errors in data validation | for keeping track of backend validation, try will be set to 1, if backend validation fails.
             );
         return view('students.new', $viewData);
     }
 
     //function that handles post data from new student form
     public function create(Request $request){
-        $input = Input::all();
-        $validator = Validator::make($input, [
-                'name' => 'required',
-                'address' => 'required',
-                'gender' => 'required',
-                'passing_year' => 'required'
-            ]);
+        $validator = Student::validate();
         if($validator->fails()){
-            return redirect()->route('students.new', array('try' => 1))->withErrors($validator)->withInput();
+            return redirect()->route('students.new')->withErrors($validator)->withInput();
         } 
+
     	$student = Student::create(Input::all()); //mass assignment
         
         //Display Flash msg on successful addition
@@ -75,9 +69,7 @@ class StudentController extends Controller{
     }
 
     //function for rendering edit form for a student.
-    public function edit($id, $try=0){
-        //$try = Input::get('try');//too keep track of backend validation, if try=1, then backend validation returned failed, and form needs to be repopulated with old values and not with the values in the database.
-        //dd($try);
+    public function edit($id){
         try{
             $student = Student::findOrFail($id);
         } catch(Exception $e) {
@@ -88,8 +80,7 @@ class StudentController extends Controller{
         $studentData = array(
             'student' => $student,
             'interestsTable' => $interestsTable,
-            'studentInterests' => $studentInterests,
-            'try' => $try
+            'studentInterests' => $studentInterests
             );
         //dd($strInterests);
         return view('students.edit', $studentData);
@@ -98,15 +89,9 @@ class StudentController extends Controller{
     //function that handles post requests from edit form
     public function update($id, Request $request){
         //------Validation-------
-        $input = Input::all();
-        $validator = Validator::make($input, [
-                'name' => 'required',
-                'address' => 'required',
-                'gender' => 'required',
-                'passing_year' => 'required'
-            ]);
+        $validator = Student::validate();
         if($validator->fails()){
-            return redirect()->route('students.edit', array('id'=>$id, 'try' => 1))->withErrors($validator)->withInput();
+            return redirect()->route('students.edit', array('id'=>$id))->withErrors($validator)->withInput();
         } 
         //-----End Validation-----
 
@@ -115,10 +100,7 @@ class StudentController extends Controller{
         } catch(Exception $e) {
             App::abort(404); //if student details not found in the database
         }
-        $student->name = $request->input("name");
-        $student->address = $request->input("address");
-        $student->gender = $request->input("gender");
-        $student->passing_year = $request->input("passing_year");
+        $student->fill($request->input());
 
         //Display flash msg on successful updation
         if($student->save()){
@@ -142,12 +124,10 @@ class StudentController extends Controller{
     //function to show individual students
     public function show($id){
         try{
-            $student = Student::findOrFail($id);
+            $student = Student::with('interests')->findOrFail($id);
         } catch(Exception $e) {
             App::abort(404);
         }
-        $student->interests;
-        //dd($old);
         return view('students.show', $student);
     }
 

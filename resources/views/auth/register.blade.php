@@ -77,7 +77,7 @@
 		</div>
 	</div>
 
-	<script src="{{ asset('js/ajax.js') }}"></script>
+	<script src="{{ asset('js/main.js') }}"></script>
 
 
 </body>

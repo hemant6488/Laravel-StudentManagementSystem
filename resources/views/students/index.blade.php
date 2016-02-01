@@ -85,7 +85,7 @@
 		</div><!-- end .st-pusher -->
 	</div><!-- end .st-container -->
 
-	<script src="{{ asset('js/rightslider.js') }}"></script>
+	<script src="{{ asset('js/main.js') }}"></script>
 
 	<div class="modal fade" id="demo">
 	  	<div class="modal-dialog">
